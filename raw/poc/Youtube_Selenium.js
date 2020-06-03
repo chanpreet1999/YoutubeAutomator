@@ -64,3 +64,12 @@ async function waitForElement(element){
     }
         
 }
+/*
+    TRIAL METHODS REMOVED FROM under let progressBar line of main activity
+        await tab.focus(".ytp-progress-bar");
+        await tab.keyboard.type(".ytp-progress-bar", String.fromCharCode(39));
+        await tab.keyboard.type(".ytp-progress-bar", String.fromCharCode(39));
+        await tab.type(".ytp-iv-video-content", String.fromCharCode(39));
+        await tab.type(".ytp-iv-video-content", String.fromCharCode(39));
+
+*/

@@ -1,4 +1,3 @@
-require('chromedriver');
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 const docx = require('docx');
