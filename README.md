@@ -24,6 +24,8 @@ change ".ytp-iv-video-content" with ".video-stream.html5-main-video".<br /><br /
 Other Notes: <br />
 1) Allow access to chromium if your anti-virus interrupts.<br />
 2) Feel free to edit this Readme for grammar correction or any other edit.<br />
-3) Make sure the word document is not open before starting the command pep.bat<br /><br />
+3) Make sure the word document is not open before starting the command pep.bat.
+
+
 What to expect in future releases?<br />
 Good and useful features :)
