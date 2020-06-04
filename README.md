@@ -21,7 +21,8 @@ How can I use it?<br />
 \*Puppeteer will install chromium which is of 150 mb approx.<br />
 \*\*If it does not take screenshots and closes the window, please navigate to the line number 59 of youtube.js in fair/activity and<br />
 change ".ytp-iv-video-content" with ".video-stream.html5-main-video".<br /><br />
-Other Notes: 1) Allow access to chromium if your anti-virus interrupts.<br />
+Other Notes: <br />
+1) Allow access to chromium if your anti-virus interrupts.<br />
 2) Feel free to edit this Readme for grammar correction or any other edit.<br />
 3) Make sure the word document is not open before starting the command pep.bat<br /><br />
 What to expect in future releases?<br />
