@@ -17,7 +17,7 @@ How can I use it?<br />
 9. You are free to change tabs using alt+tab and wait for video to get finished.<br />
 10. Once the video is over the screenshots will be added to a word document file in same folder itself.<br />
 <br /><br />
-\*Puppeteer will install chromium which is of 150 mb approx.
+\*Puppeteer will install chromium which is of 150 mb approx.<br />
 \*\*If it does not take screenshots and closes the window, please navigate to the line number 59 of youtube.js in fair/activity and<br />
 change ".ytp-iv-video-content" with ".video-stream.html5-main-video".<br /><br />
 Other Notes: 1) Allow access to chromium if your anti-virus interrupts.<br />
