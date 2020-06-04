@@ -1,16 +1,22 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-extra');
+const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
 const fs = require('fs');
 const docx = require('docx');
 const rimraf = require('rimraf');
+
+puppeteer.use(AdblockerPlugin());
 let image = [];
 
-let search = process.argv[2];
+
 (async function () {
     try {
+        
+        //create Screenshots dir
         let dir = './Screenshots';
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
         }
+
         //start browser
         let browser = await puppeteer.launch({      //these are launch options
             headless: false,
@@ -20,8 +26,42 @@ let search = process.argv[2];
         });
         let numberOfPages = await browser.pages();  //get array of open pages
         let tab = numberOfPages[0];                 //select the 1st one
+
+        //-----------------------------------------------------------//
+        let cmd = process.argv[2];
         
-        await tab.goto("https://youtube.com/", {
+        switch (cmd) {
+            
+            case '-l': console.log('Screenshot using link');
+                let link = process.argv[3];
+                await ssLinks(browser, tab, link);
+                break;
+            
+            case '-s': console.log('Screenshot using Search');
+                let search = process.argv[3];
+                await ssSearch(browser, tab, search);
+                break;
+            
+                case '-p' : console.log('Playlist');
+                let playlist = process.argv[3];
+                await ssPlaylist(browser, tab, playlist);
+                break;
+            default : console.log('Wrong input');
+        
+        }
+        //-----------------------------------------------------------//
+
+        await browser.close();
+        rimraf.sync(dir);
+    } //try ends
+    catch (err) {
+        console.log(err);
+    }
+})();
+
+async function ssSearch(browser, tab, search){
+
+    await tab.goto("https://youtube.com/", {
             waitUntil: "networkidle0"
         });
 
@@ -35,13 +75,7 @@ let search = process.argv[2];
         let firstRes = await tab.$("#contents a#video-title")
         await Promise.all([firstRes.click(), tab.waitForNavigation({ waitUntil: "networkidle2" })])
         await afterVidOpens(browser, tab);
-        await browser.close();
-        rimraf.sync(dir);
-    } //try ends
-    catch (err) {
-        console.log(err);
-    }
-})();
+}
 
 async function afterVidOpens(browser, tab) {
     try {

@@ -1,1 +1,1 @@
-node youtube.js "yuvraj singh 6 sixes"
+node youtube.js -s "yuvraj singh 6 sixes"
