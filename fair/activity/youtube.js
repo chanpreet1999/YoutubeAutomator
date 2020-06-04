@@ -15,18 +15,19 @@ let search = process.argv[2];
         let browser = await puppeteer.launch({      //these are launch options
             headless: false,
             defaultViewport: null,
-            slowMo: 100,
+              slowMo: 100,
             args: ["--start-maximized", "--incognito"]    //open in window maximized
         });
         let numberOfPages = await browser.pages();  //get array of open pages
         let tab = numberOfPages[0];                 //select the 1st one
+        
         await tab.goto("https://youtube.com/", {
             waitUntil: "networkidle0"
         });
 
         //search for the vid
         await tab.waitForSelector("#container input#search");
-        await tab.type("#container input#search", search, { delay: 100 });
+        await tab.type("#container input#search", search, { delay: 70 });
         await Promise.all([tab.keyboard.press("Enter"), tab.waitForNavigation({ waitUntil: "networkidle2" })]);
         await tab.waitForSelector("#contents a#video-title")
 
@@ -56,14 +57,15 @@ async function afterVidOpens(browser, tab) {
         });
 
         //wait for vid content to start
-        await tab.waitForSelector(".ytp-iv-video-content", { timeout: 100 * 1000 });
+        //await tab.waitForSelector(".ytp-iv-video-content", { timeout: 100 * 1000 });
+        await tab.waitForSelector(".ytp-ad-persistent-progress-bar-container", {hidden : true});
 
         //remove promotional message if it appears
         tab.waitForSelector("#message-text").then(async function (ele) {
             await tab.waitForSelector(".button-container #dismiss-button");
             await tab.click(".button-container #dismiss-button")
         }).catch(function (err) {
-            console.log("Promotion msg  not displayed");
+            console.log("Promotion msg not displayed");
         })
 
         //focus on progress bar
