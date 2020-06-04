@@ -5,7 +5,7 @@ This project helps in automation of taking screenshots of a youtube video being 
 and automatically compile them in word document in series of their capture.<br /> <br />
 
 How can I use it?<br />
-1. Clone the respository in the VS Code(prefareable) on your system.<br />
+1. Clone this respository in the VS Code(prefareable) on your system.<br />
 2. Open the project folder in the terminal and intsall the required dependencies* by using the following command:<br />
                              npm install puppeteer docx rimraf<br />
 3. Navigate to the fair\activity folder and delete the word document file if it exists there.<br />
