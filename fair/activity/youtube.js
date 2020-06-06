@@ -1,16 +1,14 @@
-const puppeteer = require('puppeteer-extra');
-const AdblockerPlugin = require('puppeteer-extra-plugin-adblocker')
+const puppeteer = require('puppeteer');
 const fs = require('fs');
 const docx = require('docx');
 const rimraf = require('rimraf');
 
-puppeteer.use(AdblockerPlugin());
 let image = [];
-
+let timer;
 
 (async function () {
     try {
-        
+
         //create Screenshots dir
         let dir = './Screenshots';
         if (!fs.existsSync(dir)) {
@@ -21,7 +19,7 @@ let image = [];
         let browser = await puppeteer.launch({      //these are launch options
             headless: false,
             defaultViewport: null,
-              slowMo: 100,
+            slowMo: 100,
             args: ["--start-maximized", "--incognito"]    //open in window maximized
         });
         let numberOfPages = await browser.pages();  //get array of open pages
@@ -29,52 +27,69 @@ let image = [];
 
         //-----------------------------------------------------------//
         let cmd = process.argv[2];
-        
+        timer = process.argv[4];
+        timer = parseInt(timer);
         switch (cmd) {
-            
+
             case '-l': console.log('Screenshot using link');
                 let link = process.argv[3];
                 await ssLinks(browser, tab, link);
                 break;
-            
+
             case '-s': console.log('Screenshot using Search');
                 let search = process.argv[3];
                 await ssSearch(browser, tab, search);
                 break;
-            
-                case '-p' : console.log('Playlist');
+
+            case '-p': console.log('Playlist');
                 let playlist = process.argv[3];
                 await ssPlaylist(browser, tab, playlist);
                 break;
-            default : console.log('Wrong input');
-        
+            default: console.log('Wrong input');
+
         }
         //-----------------------------------------------------------//
 
-        await browser.close();
-        rimraf.sync(dir);
+        browser.close();
+        rimraf(dir, function(err){
+            if(err == null)
+                console.log('Folder removed');
+            else{
+                console.log('error wile deleting folder');
+                console.log(err);
+            }    
+        });
     } //try ends
     catch (err) {
         console.log(err);
     }
 })();
 
-async function ssSearch(browser, tab, search){
+
+async function ssLinks(browser, tab, link) {
+    await tab.goto(link, {
+        waitUntil: "networkidle0"
+    });
+
+    await afterVidOpens(browser, tab);
+}
+
+async function ssSearch(browser, tab, search) {
 
     await tab.goto("https://youtube.com/", {
-            waitUntil: "networkidle0"
-        });
+        waitUntil: "networkidle0"
+    });
 
-        //search for the vid
-        await tab.waitForSelector("#container input#search");
-        await tab.type("#container input#search", search, { delay: 70 });
-        await Promise.all([tab.keyboard.press("Enter"), tab.waitForNavigation({ waitUntil: "networkidle2" })]);
-        await tab.waitForSelector("#contents a#video-title")
+    //search for the vid
+    await tab.waitForSelector("#container input#search");
+    await tab.type("#container input#search", search, { delay: 70 });
+    await Promise.all([tab.keyboard.press("Enter"), tab.waitForNavigation({ waitUntil: "networkidle2" })]);
+    await tab.waitForSelector("#contents a#video-title")
 
-        //get the 1st result
-        let firstRes = await tab.$("#contents a#video-title")
-        await Promise.all([firstRes.click(), tab.waitForNavigation({ waitUntil: "networkidle2" })])
-        await afterVidOpens(browser, tab);
+    //get the 1st result
+    let firstRes = await tab.$("#contents a#video-title")
+    await Promise.all([firstRes.click(), tab.waitForNavigation({ waitUntil: "networkidle2" })])
+    await afterVidOpens(browser, tab);
 }
 
 async function afterVidOpens(browser, tab) {
@@ -92,7 +107,14 @@ async function afterVidOpens(browser, tab) {
 
         //wait for vid content to start
         //await tab.waitForSelector(".ytp-iv-video-content", { timeout: 100 * 1000 });
-        await tab.waitForSelector(".ytp-ad-persistent-progress-bar-container", {hidden : true});
+        await tab.waitForSelector(".ytp-ad-persistent-progress-bar-container", { hidden: true });
+
+        // //switch vid to 2x speed
+        // await tab.waitForSelector(".video-stream.html5-main-video");
+        // await tab.click(".video-stream.html5-main-video");
+        // await tab.waitForSelector(".ytp-settings-button");
+        // await tab.click(".ytp-settings-button");
+
 
         //remove promotional message if it appears
         tab.waitForSelector("#message-text").then(async function (ele) {
@@ -131,14 +153,15 @@ async function takeScreenshots(browser, tab, curVal, endVal) {
                 path: `Screenshots\\${i}.jpeg`,
                 type: "jpeg",
             });
-            waitingTimeP = tab.waitFor(30 * 1000);
+            waitingTimeP = tab.waitFor(timer * 1000);
             console.log(`${i} ss taken`);
             console.log('CurrentVal :' + curVal + 'End val :' + endVal);
-            image.push(docx.Media.addImage(doc, fs.readFileSync(`Screenshots\\${i}.jpeg`), 600, 337));
+            //image.push(docx.Media.addImage(doc, fs.readFileSync(`Screenshots\\${i}.jpeg`), 600, 337));
+            image.push(docx.Media.addImage(doc, await fs.promises.readFile(`Screenshots\\${i}.jpeg`), 600, 337));
             doc.addSection({
                 children: [new docx.Paragraph(image[i - 1])],
             });
-            curVal += 30;
+            curVal += timer;
             if (curVal < endVal) {
                 await waitingTimeP;
             }
@@ -147,10 +170,11 @@ async function takeScreenshots(browser, tab, curVal, endVal) {
         console.log("No of ss taken :" + image.length);
 
         //finally write to the word document
-        docx.Packer.toBuffer(doc).then((buffer) => {
-            fs.writeFileSync("My_Youtube_Screenshots.docx", buffer);
+        docx.Packer.toBuffer(doc).then(async function(buffer) {
+            fs.writeFile("My_Youtube_Screenshots.docx", buffer, function(){
+                console.log('Written to file');
+            });
         });
-        console.log('Written to file');
 
     } catch (err) {
         console.log('Error while taking ss ');
