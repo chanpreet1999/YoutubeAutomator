@@ -1,0 +1,21 @@
+SEARCH
+node youtube -s "Search_Anything" Time_Interval_Between_SS
+
+Example
+node youtube -s "yuvraj singh 6 sixes" 30
+
+
+
+LINK
+node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS
+
+Example
+node youtube -l "https://www.youtube.com/watch?v=MWASeaYuHZo" 20
+
+
+
+PLAYLIST
+node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS
+
+Example
+node youtube -p "https://www.youtube.com/playlist?list=PLQVkTl3ccjbzbJIFzxIZy3WlRyoHqRZCp" 30
