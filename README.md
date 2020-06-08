@@ -3,9 +3,12 @@
 ## What is this project?<br />
 This project helps in automation of taking screenshots of a youtube video being played and automatically compile them in word document in series of their capture.
 It gives you several options  to take screenshots, the available options currently are <br />
-* Take SS of  a given video link COMMAND : `node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS`
-* Take SS of a whole playlist of videos COMMAND : `node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS` 
-* If you aren't sure about which video to pick, you can simply enter the search you want to make, just like a normal youtube search, it will automatically go to YouTube and search for the given keywords and bring back the SS of the 1st video. COMMAND : `node youtube -s "Search_Anything" Time_Interval_Between_SS`
+* Take SS of  a given video link 
+  * COMMAND : `node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS`
+* Take SS of a whole playlist of videos 
+  * COMMAND : `node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS` 
+* If you aren't sure about which video to pick, you can simply enter the search you want to make, just like a normal youtube search, it will automatically go to YouTube and search for the given keywords and bring back the SS of the 1st video. 
+  * COMMAND : `node youtube -s "Search_Anything" Time_Interval_Between_SS`
 
 ## How can I use it?<br />
 1. Clone this respository in the VS Code(prefareable) on your system.<br />
@@ -21,7 +24,7 @@ It gives you several options  to take screenshots, the available options current
 9. You are free to change tabs using alt+tab and wait for video to get finished.<br />
 10. Once the video is over the screenshots will be added to a word document file in same folder itself.
 
-\*Puppeteer will install chromium which is of 150 mb approx.<br />
+**Puppeteer will install chromium which is of 150 mb approx.** <br />
 
 ## Other Notes: <br />
 1) Allow access to chromium if your anti-virus interrupts.<br />
