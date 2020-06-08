@@ -14,7 +14,7 @@ It gives you several options  to take screenshots, the available options current
                              ` npm install puppeteer docx rimraf ` <br />
 
 3. Navigate to the fair\activity folder and delete the word document file if it exists there.<br />
-4. In the VS Code open the ` example.txt ` file to get an exmaple of list of commands available <br />
+4. In the VS Code open the ` example.txt ` file to get an example of list of commands available <br />
 5. Whatever you will write will be used as search input for the video.<br />
 6. Now navigate to the folder `fair\activity` in the cmd terminal and write pep and press enter to run pep.bat file.<br />
 7. A chromium browser window will open and the search will take place automatically and the first video in search will be selected.<br />
