@@ -2,10 +2,12 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const docx = require('docx');
 const rimraf = require('rimraf');
+const mkdirp = require('mkdirp')
 
-let image = [];
+let image = []; //for serial works
 let timer;
 let curCountg = 1;
+let isParallel = false;
 const doc = new docx.Document();
 
 (async function () {
@@ -49,6 +51,11 @@ const doc = new docx.Document();
                 let playlist = process.argv[3];
                 await ssPlaylist(browser, tab, playlist);
                 break;
+            case '-pParallel': console.log('Parallel Playlist');
+                let playlistP = process.argv[3];
+                isParallel = true;
+                await ssParallelPlaylist(browser, tab, playlistP);
+                break;
             default: console.log('Wrong input');
 
         }
@@ -56,14 +63,15 @@ const doc = new docx.Document();
 
         browser.close();
 
-        //finally write to the word document
-        docx.Packer.toBuffer(doc).then(async function (buffer) {
-            fs.writeFile("My_Youtube_Screenshots.docx", buffer, function () {
-                console.log('Written to file');
+        if( isParallel == false ){
+            //finally write to the word document
+            docx.Packer.toBuffer(doc).then(async function (buffer) {
+                fs.writeFile("My_Youtube_Screenshots.docx", buffer, function () {
+                    console.log('Written to file');
+                });
             });
-        });
 
-        //remove the directory
+            //remove the directory
         rimraf(dir, function (err) {
             if (err == null)
                 console.log('Folder removed');
@@ -72,6 +80,10 @@ const doc = new docx.Document();
                 console.log(err);
             }
         });
+       
+       
+        }
+       
 
     } //try ends
     catch (err) {
@@ -122,18 +134,7 @@ async function ssSearch(browser, tab, search) {
 
 async function ssPlaylist(browser, tab, playlistLink) {
     try {
-        await tab.goto(playlistLink, { waitUntil: "networkidle0" });
-
-        //get the list of all vids
-        const vidList = await tab.$$('a.yt-simple-endpoint.style-scope.ytd-playlist-video-renderer');
-
-        //get  href of every element
-        let href = [];
-        //   let curUrl = tab.url();
-        for (let ele of vidList) {
-            let curHref = await tab.evaluate(el => el.getAttribute("href"), ele);
-            href.push('https://www.youtube.com' + curHref);
-        }
+        let href = await gotoPlaylist(browser,tab, playlistLink);
 
         for (let i = 0; i < href.length; i++) {
             await tab.goto(href[i], {
@@ -151,7 +152,41 @@ async function ssPlaylist(browser, tab, playlistLink) {
     }
 }
 
-async function afterVidOpens(browser, tab) {
+async function ssParallelPlaylist(browser, tab, playlistP) {
+
+    try{
+        let href = await gotoPlaylist(browser, tab, playlistP);
+        //create folders
+        for(let i = 0; i < href.length; i++)
+        {
+            mkdirp(`./Parallel/vid${i+1}`).then(async function(made){
+                console.log(`made directories, starting with ${made}`);
+                
+            })  //then ends
+        }
+
+    }
+    catch(err){
+        console.log('Error in parallel playlist');
+        console.log(err);
+    }
+}
+
+async function gotoPlaylist(browser,tab, playlistLink) {
+    await tab.goto(playlistLink, { waitUntil: "networkidle0" });
+    //get the list of all vids
+    const vidList = await tab.$$('a.yt-simple-endpoint.style-scope.ytd-playlist-video-renderer');
+    //get  href of every element
+    let href = [];
+    //   let curUrl = tab.url();
+    for (let ele of vidList) {
+        let curHref = await tab.evaluate(el => el.getAttribute("href"), ele);
+        href.push('https://www.youtube.com' + curHref);
+    }
+    return href;
+}
+
+async function afterVidOpens(browser, tab, folder) {
     try {
         await tab.waitForSelector("button.ytp-fullscreen-button.ytp-button");   //fullscreen
         await tab.click("button.ytp-fullscreen-button.ytp-button");
@@ -191,8 +226,13 @@ async function afterVidOpens(browser, tab) {
         endVal = parseInt(endVal);
         curVal = parseInt(curVal);
         console.log(`Value Now ${curVal} EndValue ${endVal}`);
+        if(isParallel == true)
+        {
+            return ( await takeParallelScreenshots(browser, tab, curVal, endVal, folder) );
+        }
+        else{
         await takeScreenshots(browser, tab, curVal, endVal);
-
+        }
 
     } // try ends
      catch (err) {
@@ -202,6 +242,42 @@ async function afterVidOpens(browser, tab) {
 }
 
 async function takeScreenshots(browser, tab, curVal, endVal) {
+    try {
+        let waitingTimeP;
+
+        for (let i = curCountg; curVal < endVal; i++) {
+            //wait for ads to be cleared
+            await tab.waitForSelector(".ytp-ad-persistent-progress-bar-container", { hidden: true });
+            await tab.screenshot({
+                path: `Screenshots\\${i}.jpeg`,
+                type: "jpeg",
+            });
+            waitingTimeP = tab.waitFor(timer * 1000);
+            console.log(`${i} ss taken`);
+            console.log('CurrentVal :' + curVal + 'End val :' + endVal);
+            //image.push(docx.Media.addImage(doc, fs.readFileSync(`Screenshots\\${i}.jpeg`), 600, 337));
+            image.push(docx.Media.addImage(doc, await fs.promises.readFile(`Screenshots\\${i}.jpeg`), 600, 337));
+            doc.addSection({
+                children: [new docx.Paragraph(image[i - 1])],
+            });
+            curVal += timer;
+            if (curVal < endVal) {
+                await waitingTimeP;
+            }
+        }
+
+        console.log("No of ss taken :" + image.length);
+
+
+
+    } // try ends 
+    catch (err) {
+        console.log('Error while taking ss ');
+    }
+}
+
+//return an array of images
+async function takeParallelScreenshots(browser, tab, curVal, endVal, folder) {
     try {
         let waitingTimeP;
 

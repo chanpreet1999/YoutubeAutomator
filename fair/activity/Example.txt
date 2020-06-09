@@ -19,3 +19,7 @@ node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS
 
 Example
 node youtube -p "https://www.youtube.com/playlist?list=PLQVkTl3ccjbzbJIFzxIZy3WlRyoHqRZCp" 30
+
+
+PARALLEL
+node youtube -pParallel "https://www.youtube.com/playlist?list=PLQVkTl3ccjbzbJIFzxIZy3WlRyoHqRZCp" 30

@@ -1,3 +1,4 @@
 #ignore the already created docx and .bat files
 *.docx
 *.bat
+**/raw/
