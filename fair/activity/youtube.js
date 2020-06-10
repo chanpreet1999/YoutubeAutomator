@@ -12,11 +12,31 @@ const doc = new docx.Document();
 
 (async function () {
     try {
-
-        //create Screenshots dir
         let dir = './Screenshots';
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
+
+        //-----------------------------------------------------------//
+        let cmd = process.argv[2];
+        timer = process.argv[4];
+        let fileName = process.argv[5];
+        //------handle optional parameters------------------//
+        if (typeof timer === 'undefined') {
+            timer = 30;
+            fileName = "My_Youtube_Screenshots"
+        }
+        else if (timer.match(/\D/)) {
+            fileName = timer;
+            timer = 30;
+        }
+        else if (typeof fileName === 'undefined') {
+            fileName = "My_Youtube_Screenshots"
+        }
+        //----------------optional parameters handled---------//        
+
+        timer = parseInt(timer);
+
+        if (cmd != '-pParallel') {
+            //create Screenshots dir
+            await mkdirp(dir);
         }
 
         //start browser
@@ -29,10 +49,6 @@ const doc = new docx.Document();
         let numberOfPages = await browser.pages();  //get array of open pages
         let tab = numberOfPages[0];                 //select the 1st one
 
-        //-----------------------------------------------------------//
-        let cmd = process.argv[2];
-        timer = process.argv[4];
-        timer = parseInt(timer);
 
         //-----------------------------MENU-------------------------------------//
         switch (cmd) {
@@ -54,6 +70,7 @@ const doc = new docx.Document();
             case '-pParallel': console.log('Parallel Playlist');
                 let playlistP = process.argv[3];
                 isParallel = true;
+                dir = './Parallel';
                 await ssParallelPlaylist(browser, tab, playlistP);
                 break;
             default: console.log('Wrong input');
@@ -63,26 +80,23 @@ const doc = new docx.Document();
 
         browser.close();
 
-        if (isParallel == false) {
-            //finally write to the word document
-            docx.Packer.toBuffer(doc).then(async function (buffer) {
-                fs.writeFile("My_Youtube_Screenshots.docx", buffer, function () {
-                    console.log('Written to file');
-                });
+        //finally write to the word document
+        docx.Packer.toBuffer(doc).then(async function (buffer) {
+            fs.writeFile(`${fileName}.docx`, buffer, function () {
+                console.log('Written to file');
             });
+        });
 
-            //remove the directory
-            rimraf(dir, function (err) {
-                if (err == null)
-                    console.log('Folder removed');
-                else {
-                    console.log('error wile deleting folder');
-                    console.log(err);
-                }
-            });
+        //remove the directory
+        rimraf(dir, function (err) {
+            if (err == null)
+                console.log('Folder removed');
+            else {
+                console.log('error wile deleting folder');
+                console.log(err);
+            }
+        });
 
-
-        }
 
 
     } //try ends
@@ -162,7 +176,7 @@ async function ssParallelPlaylist(browser, tab, playlistP) {
             let made = await mkdirp(`./Parallel/vid${i + 1}`)
             console.log(`made directories, starting with ${made}`);
             let newTab = await browser.newPage();
-            
+
             await newTab.goto(href[i], {
                 waitUntil: "networkidle2",
                 timeout: 60 * 1000
@@ -175,33 +189,20 @@ async function ssParallelPlaylist(browser, tab, playlistP) {
 
         //wait for all promises
         let arrToWrite = await Promise.all(parallelimgP);
-      
-        console.log("++++++++++++++++++++++++++++++++++++++");
-        console.log(arrToWrite.length);
-        console.log("++++++++++++++++++++++++++++++++++++++");
-        
+
         //add sections
         console.log('starting to add sections');
-        
+
         for (let i = 0; i < arrToWrite.length; i++) {
             for (let j = 0; j < arrToWrite[i].length; j++) {
                 let data = arrToWrite[i][j];
                 console.log(data);
                 doc.addSection({
-                    children: [new docx.Paragraph( arrToWrite[i][j] )],
+                    children: [new docx.Paragraph(arrToWrite[i][j])],
                 });
             }
         }
         console.log("sections added");
-        
-        
-        //write to file
-        docx.Packer.toBuffer(doc).then(async function (buffer) {
-            fs.writeFile("My_Youtube_Screenshots_Parallel.docx", buffer, function () {
-                console.log('Written to file');
-            });
-        });
-        
 
     }
     catch (err) {
@@ -238,9 +239,9 @@ async function afterVidOpens(browser, tab, folderName) {
 
         //wait for vid content to start
         //await tab.waitForSelector(".ytp-iv-video-content", { timeout: 100 * 1000 });
-        await tab.waitForSelector(".ytp-ad-persistent-progress-bar-container", { 
+        await tab.waitForSelector(".ytp-ad-persistent-progress-bar-container", {
             hidden: true,
-            timeout: 120 * 1000 
+            timeout: 120 * 1000
         });
 
         // //switch vid to 2x speed
@@ -269,9 +270,9 @@ async function afterVidOpens(browser, tab, folderName) {
         console.log(`Value Now ${curVal} EndValue ${endVal}`);
         if (isParallel == true) {
             return new Promise(async function (resolve, reject) {
-                let rv = await takeParallelScreenshots(browser, tab, curVal, endVal, folderName) ; 
-                console.log('calling resolve with rv '+ rv); 
-                resolve( rv );
+                let rv = await takeParallelScreenshots(browser, tab, curVal, endVal, folderName);
+                console.log('calling resolve with rv ' + rv);
+                resolve(rv);
             })
         }
         else {
@@ -299,7 +300,6 @@ async function takeScreenshots(browser, tab, curVal, endVal) {
             waitingTimeP = tab.waitFor(timer * 1000);
             console.log(`${i} ss taken`);
             console.log('CurrentVal :' + curVal + 'End val :' + endVal);
-            //image.push(docx.Media.addImage(doc, fs.readFileSync(`Screenshots\\${i}.jpeg`), 600, 337));
             image.push(docx.Media.addImage(doc, await fs.promises.readFile(`Screenshots\\${i}.jpeg`), 600, 337));
             doc.addSection({
                 children: [new docx.Paragraph(image[i - 1])],
@@ -337,7 +337,7 @@ async function takeParallelScreenshots(browser, tab, curVal, endVal, folderName)
             console.log(`${i} ss taken`);
             console.log('CurrentVal :' + curVal + 'End val :' + endVal);
             imgP.push(docx.Media.addImage(doc, await fs.promises.readFile(`${folderName}/${i}.jpeg`), 600, 337));
-            
+
             curVal += timer;
             if (curVal < endVal) {
                 await waitingTimeP;
@@ -347,7 +347,7 @@ async function takeParallelScreenshots(browser, tab, curVal, endVal, folderName)
         console.log("No of ss taken :" + imgP.length);
 
         //dont wait for tab close
-         tab.close();
+        tab.close();
         return imgP;
     } // try ends 
     catch (err) {

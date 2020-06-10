@@ -7,10 +7,10 @@ node youtube -s "yuvraj singh 6 sixes" 30
 
 
 LINK
-node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS
+node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS "File_Name" time and fileName are Optional
 
 Example
-node youtube -l "https://www.youtube.com/watch?v=MWASeaYuHZo" 20
+node youtube -l "https://www.youtube.com/watch?v=SlPhMPnQ58k" 20 "MEMORIES"
 
 
 
