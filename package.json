@@ -1,0 +1,26 @@
+{
+  "name": "youtube-automator",
+  "version": "1.0.0",
+  "description": "This project helps in automation of taking screenshots of a youtube video being played and automatically compile them in word document in series of their capture.\r It gives you several options  to take screenshots, the available options currently are <br />\r * Take SS of  a given video link \r   * COMMAND : `node youtube -l \"Link_Of_The_Video\" Time_Interval_Between_SS`\r * Take SS of a whole playlist of videos \r   * COMMAND : `node youtube -p \"Link_Of_The_Playlist\" Time_Interval_Between_SS` \r * If you aren't sure about which video to pick, you can simply enter the search you want to make, just like a normal youtube search, it will automatically go to YouTube and search for the given keywords and bring back the SS of the 1st video. \r   * COMMAND : `node youtube -s \"Search_Anything\" Time_Interval_Between_SS`",
+  "main": "./fair/activity/youtube.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chanpreet1999/YoutubeAutomator.git"
+  },
+  "keywords": ["youtube","screenshots","notes","video screenshots"],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chanpreet1999/YoutubeAutomator/issues"
+  },
+  "homepage": "https://github.com/chanpreet1999/YoutubeAutomator#readme",
+  "dependencies": {
+    "docx": "^5.1.1",
+    "mkdirp": "^1.0.4",
+    "puppeteer": "^3.3.0",
+    "rimraf": "^3.0.2"
+  }
+}

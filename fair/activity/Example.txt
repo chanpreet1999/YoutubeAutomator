@@ -1,25 +1,31 @@
+TIME AND FILE_NAME ARE OPTIONAL PARAMETERS
+
 SEARCH
-node youtube -s "Search_Anything" Time_Interval_Between_SS
+node youtube -s "Search_Anything" Time_Interval_Between_SS "File_Name"
 
 Example
-node youtube -s "yuvraj singh 6 sixes" 30
+node youtube -s "yuvraj singh 6 sixes" 30 "Notes Folder"
 
 
 
 LINK
-node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS "File_Name" time and fileName are Optional
+node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS "File_Name"
 
 Example
-node youtube -l "https://www.youtube.com/watch?v=SlPhMPnQ58k" 20 "MEMORIES"
+node youtube -l "https://www.youtube.com/watch?v=SlPhMPnQ58k" "MEMORIES"
 
 
 
 PLAYLIST
-node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS
+node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS "File_Name"
 
 Example
 node youtube -p "https://www.youtube.com/playlist?list=PLQVkTl3ccjbzbJIFzxIZy3WlRyoHqRZCp" 30
 
 
-PARALLEL
-node youtube -pParallel "https://www.youtube.com/playlist?list=PLQVkTl3ccjbzbJIFzxIZy3WlRyoHqRZCp" 30
+
+PARALLEL PLAYLIST
+node youtube -pParallel "Link_Of_The_Playlist" Time_Interval_Between_SS "File_Name"
+
+Example
+node youtube -pParallel "https://www.youtube.com/playlist?list=PLQVkTl3ccjbzbJIFzxIZy3WlRyoHqRZCp"

@@ -13,7 +13,7 @@ const doc = new docx.Document();
 (async function () {
     try {
         let dir = './Screenshots';
-
+        let makeDirP;
         //-----------------------------------------------------------//
         let cmd = process.argv[2];
         timer = process.argv[4];
@@ -36,7 +36,7 @@ const doc = new docx.Document();
 
         if (cmd != '-pParallel') {
             //create Screenshots dir
-            await mkdirp(dir);
+             makeDirP = mkdirp(dir);
         }
 
         //start browser
@@ -55,16 +55,19 @@ const doc = new docx.Document();
 
             case '-l': console.log('Screenshot using link');
                 let link = process.argv[3];
+                await makeDirP;
                 await ssLinks(browser, tab, link);
                 break;
 
             case '-s': console.log('Screenshot using Search');
                 let search = process.argv[3];
+                await makeDirP;
                 await ssSearch(browser, tab, search);
                 break;
 
             case '-p': console.log('Playlist');
                 let playlist = process.argv[3];
+                await makeDirP;
                 await ssPlaylist(browser, tab, playlist);
                 break;
             case '-pParallel': console.log('Parallel Playlist');

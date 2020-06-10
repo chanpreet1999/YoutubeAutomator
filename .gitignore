@@ -1,4 +1,5 @@
 #ignore the already created docx and .bat files
 **.docx
 **.bat
-raw/
+raw/**
+node_modules/**
