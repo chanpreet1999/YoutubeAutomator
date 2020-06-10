@@ -9,7 +9,7 @@ This project helps in automation of taking screenshots of a youtube video being 
   * COMMAND : `node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS "File_Name"`
 * Take SS of  a playlist of videos parallely 
   * COMMAND : `node youtube -pParallel "Link_Of_The_Playlist" Time_Interval_Between_SS "File_Name"`
-##Usage<br />
+## Usage<br />
 1. Clone this respository on your system.<br />
 2. Open the root folder of the project in the terminal and install the required dependencies* by using the following command:<br />
                              ` npm install` <br />
