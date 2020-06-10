@@ -10,17 +10,17 @@ This project helps in automation of taking screenshots of a youtube video being 
 * Take SS of  a playlist of videos parallely 
   * COMMAND : `node youtube -pParallel "Link_Of_The_Playlist" Time_Interval_Between_SS "File_Name"`
 ## Usage<br />
-1. Clone this respository on your system.<br />
+1. Clone this respository on your system.
 2. Open the root folder of the project in the terminal and install the required dependencies* by using the following command:<br />
                              ` npm install` <br />
-  **Puppeteer will install chromium which is of 150 mb approx.** <br />
+  **Puppeteer will install chromium which is of 150 mb approx.**
 
-3. Navigate to the `fair\activity` folder .<br />
-4. Open the ` example.txt ` file to get an example of list of commands available <br />
-5. You can choose any of the commands written in `example.txt` file.<br />
-6. A Chromium browser window will open and the search will take place automatically and the first video in search will be selected.<br />
-7. Video will run in full screen mode(not for parallel) screenshots will be taken at 30s interval (by default)or you can specify any value<br />
-8. You are free to change tabs using alt+tab and wait for video to get finished.<br />
+3. Navigate to the `fair\activity` folder .
+4. Open the ` example.txt ` file to get an example of list of commands available.
+5. You can choose any of the commands written in `example.txt` file.
+6. A Chromium browser window will open and the search will take place automatically and the first video in search will be selected.
+7. Video will run in full screen mode(not for parallel) screenshots will be taken at 30s interval (by default)or you can specify any value.
+8. You are free to change tabs using alt+tab and wait for video to finish.
 9. Once the video is over the screenshots will be added to a word document file in same folder with your given name.
 
 ## Other Notes: <br />
