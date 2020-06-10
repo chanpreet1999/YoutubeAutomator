@@ -233,12 +233,12 @@ async function afterVidOpens(browser, tab, folderName) {
         await tab.waitForSelector("button.ytp-fullscreen-button.ytp-button");   //fullscreen
         await tab.click("button.ytp-fullscreen-button.ytp-button");
 
-        //click skip btn when add appears
-        tab.waitForSelector(".ytp-ad-skip-button", { timeout: 10 * 1000 }).then(async function () {
-            await tab.click('.ytp-ad-skip-button');
-        }).catch(function (err) {
-            console.log('No ad displayed');
-        });
+        // //click skip btn when add appears
+        // tab.waitForSelector(".ytp-ad-skip-button", { timeout: 10 * 1000 }).then(async function () {
+        //     await tab.click('.ytp-ad-skip-button');
+        // }).catch(function (err) {
+        //     console.log('No ad displayed');
+        // });
 
         //wait for vid content to start
         //await tab.waitForSelector(".ytp-iv-video-content", { timeout: 100 * 1000 });
