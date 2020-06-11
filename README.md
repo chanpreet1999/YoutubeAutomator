@@ -3,7 +3,7 @@ This project helps in automation of taking screenshots of a youtube video being 
 ## List of Commands<br />
 * Take SS of  a given video link 
   * COMMAND : `node youtube -s "Search_Anything" Time_Interval_Between_SS "File_Name"`
-* Take SS of a whole playlist of videos (seral)
+* Take SS of a whole playlist of videos (serial)
   * COMMAND : `node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS "File_Name"` 
 * If you aren't sure about which video to pick, you can simply enter the search you want to make, just like a normal youtube search, it will automatically go to YouTube and search for the given keywords and bring back the SS of the 1st video. 
   * COMMAND : `node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS "File_Name"`
