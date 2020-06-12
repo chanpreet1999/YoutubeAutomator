@@ -4,7 +4,7 @@ SEARCH
 node youtube -s "Search_Anything" Time_Interval_Between_SS "File_Name"
 
 Example
-node youtube -s "yuvraj singh 6 sixes" 30 "Notes Folder"
+node youtube -s "circles" 20 "Some Music"
 
 
 
@@ -12,20 +12,20 @@ LINK
 node youtube -l "Link_Of_The_Video" Time_Interval_Between_SS "File_Name"
 
 Example
-node youtube -l "https://www.youtube.com/watch?v=SlPhMPnQ58k" "MEMORIES"
+node youtube -l "https://www.youtube.com/watch?v=2ONm2TdQEh0" "Notes AI"
 
 
 
 PLAYLIST
 node youtube -p "Link_Of_The_Playlist" Time_Interval_Between_SS "File_Name"
 
-Example
-node youtube -p "https://www.youtube.com/playlist?list=PLQVkTl3ccjbzbJIFzxIZy3WlRyoHqRZCp" 30
+Example(with defaut name)
+node youtube -p "https://www.youtube.com/playlist?list=PLQVkTl3ccjbxOGpsynMlwacf6R_4baL-E" 20
 
 
 
 PARALLEL PLAYLIST
 node youtube -pParallel "Link_Of_The_Playlist" Time_Interval_Between_SS "File_Name"
 
-Example
-node youtube -pParallel "https://www.youtube.com/playlist?list=PLQVkTl3ccjbzbJIFzxIZy3WlRyoHqRZCp"
+Example(with default time)
+node youtube -pParallel "https://www.youtube.com/playlist?list=PLQVkTl3ccjbxOGpsynMlwacf6R_4baL-E" "Parallel_Playlist"
