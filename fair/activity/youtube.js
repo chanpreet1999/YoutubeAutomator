@@ -199,7 +199,6 @@ async function ssParallelPlaylist(browser, tab, playlistP) {
         for (let i = 0; i < arrToWrite.length; i++) {
             for (let j = 0; j < arrToWrite[i].length; j++) {
                 let data = arrToWrite[i][j];
-                console.log(data);
                 doc.addSection({
                     children: [new docx.Paragraph(arrToWrite[i][j])],
                 });
@@ -320,6 +319,8 @@ async function takeScreenshots(browser, tab, curVal, endVal) {
     } // try ends 
     catch (err) {
         console.log('Error while taking ss ');
+        console.log(err);
+        
     }
 }
 
