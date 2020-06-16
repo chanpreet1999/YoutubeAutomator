@@ -16,7 +16,7 @@ This project helps in automation of taking screenshots of a youtube video being 
   **Puppeteer will install chromium which is of 150 mb approx.**
 
 3. Navigate to the `fair\activity` folder .
-4. Open the ` example.txt ` file to get an example of list of commands available.
+4. Open the ` example.txt ` file to get an example of list of commands available or you can check out this [video](https://drive.google.com/folderview?id=1eg5cjKSIhHacWCFcFK1CKE1bMSnyE_44) .
 5. You can choose any of the commands written in `example.txt` file.
 6. A Chromium browser window will open and the search will take place automatically and the first video in search will be selected.
 7. Video will run in full screen mode(not for parallel) screenshots will be taken at 30s interval (by default)or you can specify any value.
