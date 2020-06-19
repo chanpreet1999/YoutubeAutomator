@@ -36,7 +36,7 @@ const doc = new docx.Document();
 
         if (cmd != '-pParallel') {
             //create Screenshots dir
-             makeDirP = mkdirp(dir);
+            makeDirP = mkdirp(dir);
         }
 
         //start browser
@@ -173,32 +173,16 @@ async function ssParallelPlaylist(browser, tab, playlistP) {
 
     try {
         let href = await gotoPlaylist(browser, tab, playlistP);
-        //create folders
-        parallelimgP = [];
-        for (let i = 0; i < href.length; i++) {
-            let made = await mkdirp(`./Parallel/vid${i + 1}`)
-            console.log(`made directories, starting with ${made}`);
-            let newTab = await browser.newPage();
-
-            await newTab.goto(href[i], {
-                waitUntil: "networkidle2",
-                timeout: 60 * 1000
-            });
-
-            let handleSingleVid = afterVidOpens(browser, newTab, `./Parallel/vid${i + 1}`);
-            parallelimgP[i] = handleSingleVid;
-
-        }       //for ends
-
-        //wait for all promises
-        let arrToWrite = await Promise.all(parallelimgP);
-
+        let idx = 0;
+        let arrToWrite = [];
+        while (idx < href.length) {
+            arrToWrite = await limitParallel(browser, href, idx, idx + 5, arrToWrite);
+            idx = idx + 5;
+        }
         //add sections
         console.log('starting to add sections');
-
         for (let i = 0; i < arrToWrite.length; i++) {
             for (let j = 0; j < arrToWrite[i].length; j++) {
-                let data = arrToWrite[i][j];
                 doc.addSection({
                     children: [new docx.Paragraph(arrToWrite[i][j])],
                 });
@@ -211,6 +195,28 @@ async function ssParallelPlaylist(browser, tab, playlistP) {
         console.log('Error in parallel playlist');
         console.log(err);
     }
+}
+
+async function limitParallel(browser, href, start, end, arrToWrite) {
+    let parallelimgP = [];
+    for (let i = start; i < end && i < href.length; i++) {
+
+        let made = await mkdirp(`./Parallel/vid${i + 1}`)
+        console.log(`made directories, starting with ${made}`);
+
+        let newTab = await browser.newPage();
+        await newTab.goto(href[i], {
+            waitUntil: "networkidle2",
+            timeout: 60 * 1000
+        });
+
+        let handleSingleVid = afterVidOpens(browser, newTab, `./Parallel/vid${i + 1}`);
+        parallelimgP[i] = handleSingleVid;
+    }   //for ends
+    let temp = await Promise.all(parallelimgP);   //wait for the tabs to complete their work
+
+    arrToWrite = arrToWrite.concat(temp);
+    return arrToWrite;
 }
 
 async function gotoPlaylist(browser, tab, playlistLink) {
@@ -302,7 +308,7 @@ async function takeScreenshots(browser, tab, curVal, endVal) {
             waitingTimeP = tab.waitFor(timer * 1000);
             console.log(`${i} ss taken`);
             console.log('CurrentVal :' + curVal + 'End val :' + endVal);
-            image.push(docx.Media.addImage(doc, await fs.promises.readFile(`Screenshots\\${i}.jpeg`), 600, 337));
+            image.push(docx.Media.addImage(doc, await fs.promises.readFile(`Screenshots\\${i}.jpeg`), 600, 454));
             doc.addSection({
                 children: [new docx.Paragraph(image[i - 1])],
             });
@@ -320,7 +326,7 @@ async function takeScreenshots(browser, tab, curVal, endVal) {
     catch (err) {
         console.log('Error while taking ss ');
         console.log(err);
-        
+
     }
 }
 
@@ -351,7 +357,7 @@ async function takeParallelScreenshots(browser, tab, curVal, endVal, folderName)
         console.log("No of ss taken :" + imgP.length);
 
         //dont wait for tab close
-        tab.close();
+        await tab.close();
         return imgP;
     } // try ends 
     catch (err) {
