@@ -44,6 +44,9 @@ const doc = new docx.Document();
             headless: false,
             defaultViewport: null,
             slowMo: 100,
+            //PARAMETERS FOR BRAVE BROWSER
+            //executablePath: 'C:/Program Files (x86)/BraveSoftware/Brave-Browser/Application/brave.exe', //parameters for brave, this is just an example please change according to your system
+            //userDataDir: "C:/Users/SYSTEM_NAME/AppData/Local/BraveSoftware/Brave-Browser/User Data",  //user data location for brave, , this is just an example please change according to your system
             args: ["--start-maximized", "--incognito"]    //open in window maximized
         });
         let numberOfPages = await browser.pages();  //get array of open pages
@@ -267,9 +270,8 @@ async function afterVidOpens(browser, tab, folderName) {
             console.log("Promotion msg not displayed");
         })
 
-        //focus on progress bar
         let progressBar = await tab.waitForSelector('.ytp-progress-bar');
-
+       
         //get current and end values of the vid 
         let endVal = await tab.evaluate(el => el.getAttribute("aria-valuemax"), progressBar);
         let curVal = await tab.evaluate(el => el.getAttribute("aria-valuenow"), progressBar);
