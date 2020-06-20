@@ -27,4 +27,4 @@ This project helps in automation of taking screenshots of a youtube video being 
 1) Allow access to chromium if your anti-virus interrupts.<br />
 2) Make sure the word document is not open(if a file with the  given name already exists) before running any command.
 3) For Parallel Screenshots you need to change to every tab that is opened automatically and wait for the vid to start.
-4) Youtube ads are annoying no doubt, for now you need to skip YouTube ads manually
+4) Youtube ads are annoying no doubt, so you can use a browser with inbuilt ad blocker functionality like `Brave` or you'll have to skip ads manually.
